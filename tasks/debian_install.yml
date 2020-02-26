@@ -1,0 +1,33 @@
+---
+
+- name: "Debian - Install dependencies"
+  become: true
+  package:
+    name: 
+      - apt-transport-https
+      - gpg
+    state: present
+
+
+- name: "Debian - Add telegraf apt key"
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key 
+    state: present
+
+- name: "Debian - Add telegraf apt repository"
+  apt_repository:
+    repo: deb https://repos.influxdata.com/debian buster stable
+    state: present
+    filename: influxdb
+
+- name: "Debian - Install telegraf"
+  apt:
+    name: telegraf
+    state: present
+    update_cache: true
+
+- name: "Debian - Enable telegraf"
+  service:
+    name: telegraf
+    state: started
+    enabled: true
